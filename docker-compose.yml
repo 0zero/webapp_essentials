@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+#  WEBAPI containing FASTapi 
+  webapi:
+    build: ./
+    command: bash -c "cd src/database/ && alembic upgrade head && cd ../../ && uvicorn src.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "8004:8000"
+    environment:
+      - ENVIRONMENT=dev
+      - TESTING=0
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/supplies
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@database:5432/supplies_test
+    depends_on:
+      - database
+
+  # Database
+  database:
+    build:
+      context: src/database
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_NAME=supplies
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
