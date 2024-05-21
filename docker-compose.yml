@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-#  WEBAPI containing FASTapi 
+#  WEBAPI containing FastAPI
   webapi:
     build: ./
-    command: bash -c "cd src/database/ && alembic upgrade head && cd ../../ && uvicorn src.main:app --reload --workers 1 --host 0.0.0.0 --port 8000"
+    command: uvicorn src.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     volumes:
       - ./:/usr/src/app
     ports:
@@ -12,8 +12,8 @@ services:
     environment:
       - ENVIRONMENT=dev
       - TESTING=0
-      - DATABASE_URL=postgresql://postgres:postgres@database:5432/supplies
-      - DATABASE_TEST_URL=postgresql://postgres:postgres@database:5432/supplies_test
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/products
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@database:5432/products_test
     depends_on:
       - database
 
@@ -25,11 +25,11 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_NAME=supplies
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=products
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
       timeout: 5s
       retries: 5
