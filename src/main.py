@@ -13,6 +13,16 @@ basicConfig(level=INFO)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """
+    A generator function that handles the lifespan events of the FastAPI application.
+
+    Args:
+        app (FastAPI): The FastAPI application instance.
+
+    Yields:
+        None: This function is a generator and yields None.
+
+    """
     logger.info("Starting up...")
     create_db_and_tables()
     yield
@@ -21,6 +31,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 
 def get_app() -> FastAPI:
+    """
+    Returns a FastAPI application instance with the title "FastAPI Products".
+    """
     app = FastAPI(title="FastAPI Products", lifespan=lifespan)
     app.include_router(product.router)
     return app

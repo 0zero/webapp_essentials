@@ -53,7 +53,7 @@ def update_product(session: Session, product_name: str, product_update: ProductU
 
     Args:
         product_name (str): The name of the product to be updated.
-        product_data (dict[str, Any]): The updated data for the product.
+        product_update(ProductUpdate): The updated data for the product.
 
     Returns:
         Product: The updated product object.

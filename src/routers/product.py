@@ -22,7 +22,7 @@ def create(product: ProductCreate, session: Session = Depends(get_session)) -> P
     Create a new product.
 
     Args:
-        product (ProductBase): The product data to create.
+        product (ProductCreate): The product data to create.
         session (Session, optional): The database session. Defaults to Depends(get_session).
 
     Returns:

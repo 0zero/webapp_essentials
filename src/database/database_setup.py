@@ -16,6 +16,9 @@ engine = create_engine(DATABASE_URL)
 
 
 def create_db_and_tables() -> None:
+    """
+    Creates the database and tables defined in the SQLModel metadata.
+    """
     SQLModel.metadata.create_all(engine)
 
 
