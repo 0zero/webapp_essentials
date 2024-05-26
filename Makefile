@@ -17,4 +17,4 @@ stop:
 	docker compose down
 
 test:
-	docker exec -it webapp_essentials python -m pytest
+	docker compose exec webapi python3 -m pytest
