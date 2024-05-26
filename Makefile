@@ -10,5 +10,11 @@ type-check:
 lint: format type-check
 	@echo "All linters and formatters have been run successfully."
 
-build:
-	docker build -t webapp_essentials . -f Dockerfile
+run:
+	docker compose up --build -d
+
+stop:
+	docker compose down
+
+test:
+	docker exec -it webapp_essentials python -m pytest

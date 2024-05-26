@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
 #  WEBAPI containing FastAPI
@@ -12,8 +11,8 @@ services:
     environment:
       - ENVIRONMENT=dev
       - TESTING=0
-      - DATABASE_URL=postgresql://postgres:postgres@database:5432/products
-      - DATABASE_TEST_URL=postgresql://postgres:postgres@database:5432/products_test
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/inventory
+      - DATABASE_TEST_URL=postgresql://postgres:postgres@database:5432/inventory_test
     depends_on:
       - database
 
@@ -27,7 +26,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=products
+      - POSTGRES_DB=inventory
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
