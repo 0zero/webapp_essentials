@@ -2,6 +2,7 @@
 
 WebApp Essentials is a simple web application built using FastAPI, SQLModel, and Docker. This project serves as a starting point for building web applications with these technologies.
 
+A walkthrough of the project can be found at: [WebApp Essentials: a simple app using FastAPI, SQLModel, and Docker](https://medium.com/@japheth.yates/webapp-essentials-a-simple-app-using-fastapi-sqlmodel-and-docker-242cb7a85552).
 
 ## Getting Started
 
