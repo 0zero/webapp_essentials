@@ -2,6 +2,7 @@
 This module contains tests for the CRUD operations in the database.
 """
 
+import pytest
 from src.database.crud_operations import (
     delete_product,
     get_all_products,
@@ -10,6 +11,7 @@ from src.database.crud_operations import (
     update_product,
 )
 from src.database.product import Product, ProductUpdate
+from pydantic import ValidationError
 
 
 def test_post_product(test_db):
@@ -23,11 +25,12 @@ def test_post_product(test_db):
     assert added_product.id is not None
     assert added_product.name == "Test Product"
     assert added_product.price == 10.99
+    assert added_product.in_stock is False
 
 
 def test_get_product(test_db):
     # Add a test product to the database
-    product = Product(name="Test Product", price=10.99)
+    product = Product(name="Test Product", price=999.99)
     test_db.add(product)
     test_db.commit()
 
@@ -37,7 +40,7 @@ def test_get_product(test_db):
     # Check if the product was retrieved successfully
     assert retrieved_product is not None
     assert retrieved_product.name == "Test Product"
-    assert retrieved_product.price == 10.99
+    assert retrieved_product.price == 999.99
 
 
 def test_get_all_products(test_db):
@@ -60,7 +63,7 @@ def test_get_all_products(test_db):
 
 def test_update_product(test_db):
     # Add a test product to the database
-    product = Product(name="Test Product", price=10.99)
+    product = Product(name="Test Product", price=10.99, in_stock=True)
     test_db.add(product)
     test_db.commit()
 
@@ -70,6 +73,26 @@ def test_update_product(test_db):
 
     # Check if the product was updated successfully
     assert updated_product.name == "Test Product"
+    assert updated_product.price == 19.99
+    assert updated_product.in_stock is True
+
+
+def test_update_nonexistent_product_without_name(test_db):
+    # Attempt to update a product that doesn't exist
+    product_update = ProductUpdate(price=19.99)
+    with pytest.raises(ValidationError) as exc_info:
+        update_product(test_db, "Nonexistent Product", product_update)
+        assert exc_info.value.errors() == [{'loc': ('name',), 'msg': 'Field required', 'type': 'missing'}]
+
+
+def test_update_nonexistent_product_with_name(test_db):
+    # Attempt to update a product that doesn't exist
+    product_update = ProductUpdate(name="Nonexistent Product", price=19.99)
+    updated_product = update_product(test_db, "Nonexistent Product", product_update)
+
+    # Check if the function returns a new product
+    assert updated_product is not None
+    assert updated_product.name == "Nonexistent Product"
     assert updated_product.price == 19.99
 
 
@@ -86,3 +109,11 @@ def test_delete_product(test_db):
     assert deleted_product is not None
     assert deleted_product.name == "Test Product"
     assert deleted_product.price == 10.99
+
+
+def test_delete_nonexistent_product(test_db):
+    # Attempt to delete a product that doesn't exist
+    deleted_product = delete_product(test_db, "Nonexistent Product")
+
+    # Check if the function returns None
+    assert deleted_product is None

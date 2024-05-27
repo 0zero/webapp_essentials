@@ -1,0 +1,15 @@
+# Ignore .git and .vscode directories
+.git
+.vscode
+.idea
+
+# Ignore Python cache files and directories
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+.pytest_cache
+
+# Ignore log files
+*.log
